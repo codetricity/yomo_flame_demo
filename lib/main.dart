@@ -16,6 +16,8 @@ class YomoGame extends FlameGame with HasDraggables {
   @override
   Future<void> onLoad() async {
     super.onLoad();
+    add(SpriteComponent(
+        sprite: await loadSprite('background.jpg'), size: size));
     final knobPaint = BasicPalette.blue.withAlpha(200).paint();
     final backgroundPaint = BasicPalette.blue.withAlpha(100).paint();
     joystick = JoystickComponent(
