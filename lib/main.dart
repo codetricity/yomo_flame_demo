@@ -3,15 +3,31 @@ import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
 
+import 'menu.dart';
+
 enum YomoState { stop, left, right, front, back }
 
 void main() {
-  runApp(GameWidget(game: YomoGame()));
+  YomoGame game = YomoGame();
+  runApp(MaterialApp(
+      home: Scaffold(
+          body: Stack(
+    children: [
+      GameWidget(
+        game: game,
+      ),
+      SliderExample(
+        game: game,
+      ),
+    ],
+  ))));
 }
 
 class YomoGame extends FlameGame with HasDraggables {
   late final JoystickComponent joystick;
   late final SpriteAnimationGroupComponent yomoCharacter;
+  double characterDefaultSize = 300.0;
+  double characterSizeAdjustment = 50.0;
 
   @override
   Future<void> onLoad() async {
@@ -67,7 +83,7 @@ class YomoGame extends FlameGame with HasDraggables {
           YomoState.stop: stopAnimation
         },
         current: YomoState.stop,
-        size: Vector2.all(300),
+        size: Vector2.all(characterDefaultSize),
         anchor: Anchor.center,
         position: size / 2);
     add(yomoCharacter);
@@ -93,5 +109,8 @@ class YomoGame extends FlameGame with HasDraggables {
     } else {
       yomoCharacter.current = YomoState.stop;
     }
+    // print((characterSizeAdjustment - 50) * 5);
+    yomoCharacter.size = Vector2.all(
+        characterDefaultSize + ((characterSizeAdjustment - 50) * 5));
   }
 }
