@@ -3,18 +3,15 @@ import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
 
+enum YomoState { stop, left, right, front, back }
+
 void main() {
   runApp(GameWidget(game: YomoGame()));
 }
 
 class YomoGame extends FlameGame with HasDraggables {
-  late SpriteAnimation frontAnimation;
-  late SpriteAnimation stopAnimation;
-  late SpriteAnimation leftAnimation;
-  late SpriteAnimation rightAnimation;
-  late SpriteAnimation backAnimation;
   late final JoystickComponent joystick;
-  late SpriteAnimationComponent yomoCharacter;
+  late final SpriteAnimationGroupComponent yomoCharacter;
 
   @override
   Future<void> onLoad() async {
@@ -35,28 +32,39 @@ class YomoGame extends FlameGame with HasDraggables {
     for (int i = 0; i < 10; i++) {
       frontSprites.add(await Sprite.load('front/front_$i.png'));
     }
-    frontAnimation = SpriteAnimation.spriteList(frontSprites, stepTime: 0.1);
+    final frontAnimation =
+        SpriteAnimation.spriteList(frontSprites, stepTime: 0.1);
 
     for (int i = 0; i < 9; i++) {
       backSprites.add(await Sprite.load('back/back_$i.png'));
     }
-    backAnimation = SpriteAnimation.spriteList(backSprites, stepTime: 0.1);
+    final backAnimation =
+        SpriteAnimation.spriteList(backSprites, stepTime: 0.1);
 
     for (int i = 0; i < 9; i++) {
       rightSprites.add(await Sprite.load('right/right_$i.png'));
     }
-    rightAnimation = SpriteAnimation.spriteList(rightSprites, stepTime: 0.1);
+    final rightAnimation =
+        SpriteAnimation.spriteList(rightSprites, stepTime: 0.1);
 
     for (int i = 0; i < 9; i++) {
       leftSprites.add(await Sprite.load('left/left_$i.png'));
     }
-    leftAnimation = SpriteAnimation.spriteList(leftSprites, stepTime: 0.1);
-    stopAnimation = SpriteAnimation.spriteList(
+    final leftAnimation =
+        SpriteAnimation.spriteList(leftSprites, stepTime: 0.1);
+    final stopAnimation = SpriteAnimation.spriteList(
         [await loadSprite('front/front_0.png')],
         stepTime: 0.1);
 
-    yomoCharacter = SpriteAnimationComponent(
-        animation: frontAnimation,
+    yomoCharacter = SpriteAnimationGroupComponent(
+        animations: {
+          YomoState.back: backAnimation,
+          YomoState.front: frontAnimation,
+          YomoState.left: leftAnimation,
+          YomoState.right: rightAnimation,
+          YomoState.stop: stopAnimation
+        },
+        current: YomoState.stop,
         size: Vector2.all(300),
         anchor: Anchor.center,
         position: size / 2);
@@ -68,20 +76,20 @@ class YomoGame extends FlameGame with HasDraggables {
     super.update(dt);
     if (joystick.relativeDelta.y > 0.4) {
       yomoCharacter.y += joystick.relativeDelta.y;
-      yomoCharacter.animation = frontAnimation;
+      yomoCharacter.current = YomoState.front;
     } else if (joystick.relativeDelta.y < -0.4) {
       yomoCharacter.y += joystick.relativeDelta.y;
-      yomoCharacter.animation = backAnimation;
+      yomoCharacter.current = YomoState.back;
     } else if (joystick.relativeDelta.x < -0.4) {
       yomoCharacter.x += joystick.relativeDelta.x;
-      yomoCharacter.animation = leftAnimation;
+      yomoCharacter.current = YomoState.left;
       // print('left');
     } else if (joystick.relativeDelta.x > 0.4) {
       yomoCharacter.x += joystick.relativeDelta.x;
-      yomoCharacter.animation = rightAnimation;
+      yomoCharacter.current = YomoState.right;
       // print('right');
     } else {
-      yomoCharacter.animation = stopAnimation;
+      yomoCharacter.current = YomoState.stop;
     }
   }
 }
