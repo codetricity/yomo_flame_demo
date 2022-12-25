@@ -20,3 +20,11 @@ with the Slider.
 * flame virtual joystick
 * flame sprite animation group
 * flutter slider to alter flame state
+
+##  Assets
+
+### Music
+
+* https://www.bensound.com/royalty-free-music/track/adventure
+* https://www.bensound.com/royalty-free-music/track/happy-rock
+* https://www.bensound.com/royalty-free-music/track/smile

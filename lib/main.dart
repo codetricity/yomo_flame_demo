@@ -1,13 +1,19 @@
 import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
+import 'package:yomo/audio_button.dart';
 
 import 'menu.dart';
 
 enum YomoState { stop, left, right, front, back }
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Flame.device.fullScreen();
+  Flame.device.setLandscapeLeftOnly();
   YomoGame game = YomoGame();
   runApp(MaterialApp(
       home: Scaffold(
@@ -16,8 +22,13 @@ void main() {
       GameWidget(
         game: game,
       ),
-      SliderExample(
-        game: game,
+      Row(
+        children: [
+          const AudioButton(),
+          SliderExample(
+            game: game,
+          ),
+        ],
       ),
     ],
   ))));
@@ -87,6 +98,10 @@ class YomoGame extends FlameGame with HasDraggables {
         anchor: Anchor.center,
         position: size / 2);
     add(yomoCharacter);
+
+    // audio
+    FlameAudio.bgm.initialize();
+    FlameAudio.bgm.play('smile.mp3', volume: 0.2);
   }
 
   @override

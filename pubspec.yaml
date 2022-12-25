@@ -37,6 +37,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   flame: ^1.5.0
+  flame_audio: ^1.3.3
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +68,7 @@ flutter:
     - assets/images/back/
     - assets/images/right/
     - assets/images/left/
+    - assets/audio/
 
   #   - images/a_dot_ham.jpeg
 
